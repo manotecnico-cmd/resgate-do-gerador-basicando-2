@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Resgate do Gerador – Fase 2 (Basicando 2) v1.0.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #020617;
+      color: #e5e7eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .game-container {
+      background: radial-gradient(circle at top, #1e293b, #020617 55%);
+      border-radius: 20px;
+      padding: 24px 20px;
+      max-width: 520px;
+      width: 92%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+      border: 1px solid #1f2937;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-top: 0;
+      margin-bottom: 8px;
+      color: #38bdf8;
+      text-align: center;
+    }
+    h2 {
+      font-size: 1.1rem;
+      margin: 0 0 8px 0;
+      text-align: center;
+      color: #e5e7eb;
+    }
+    .subtitle {
+      font-size: 0.85rem;
+      color: #9ca3af;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .badge {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #fbbf24;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .disclaimer {
+      font-size: 0.75rem;
+      color: #9ca3af;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .question {
+      margin-bottom: 16px;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    button.option-btn {
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: #0b1120;
+      color: #e5e7eb;
+      text-align: left;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.1s;
+      font-size: 0.95rem;
+      border: 1px solid #1f2937;
+    }
+    button.option-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+      background: #111827;
+    }
+    button.option-btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+    .feedback {
+      min-height: 40px;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+    .score {
+      font-size: 0.9rem;
+      color: #a5b4fc;
+      margin-bottom: 8px;
+    }
+    .mentor {
+      font-size: 0.85rem;
+      color: #facc15;
+      margin-bottom: 8px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: #38bdf8;
+      color: #020617;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.95rem;
+      transition: background 0.1s, transform 0.08s, box-shadow 0.08s;
+      text-align: center;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .btn-primary:hover {
+      background: #0ea5e9;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+    .btn-ghost {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: transparent;
+      color: #9ca3af;
+      border: 1px solid #1f2937;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.1s, color 0.1s, transform 0.08s;
+      width: 100%;
+      margin-top: 6px;
+    }
+    .btn-ghost:hover {
+      background: #020617;
+      color: #e5e7eb;
+      transform: translateY(-1px);
+    }
+    .tagline {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 10px;
+      text-align: center;
+    }
+    .small {
+      font-size: 0.8rem;
+    }
+    .mt-8 { margin-top: 8px; }
+    .mt-16 { margin-top: 16px; }
+    .highlight { color: #38bdf8; font-weight: bold; }
+/* BASE – vale para todos */
+.mascote-fixed{
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.95;
+}
+
+/* DESKTOP */
+@media (min-width: 1025px){
+  .mascote-fixed{
+    width: 190px;
+    top: 120px;
+    right: 120px;
+  }
+}
+
+/* TABLET */
+@media (min-width: 601px) and (max-width: 1024px){
+  .mascote-fixed{
+    width: 170px;
+    top: 120px;
+    right: 20px;
+  }
+}
+
+/* CELULAR — SEMPRE O ÚLTIMO */
+@media (max-width: 600px){
+  .mascote-fixed{
+    width: 95px;
+    right: 8px;
+    bottom: 12px;
+    top: auto;
+    opacity: 0.9;
+  }
+}
+
+
+
+  </style>
+</head>
+<body>
+<img class="mascote-fixed" src="assets/maninho.png" alt="Maninho" />
+
+  <div class="game-container">
+
+    <!-- MENU -->
+    <div id="menuScreen">
+      <h1>Resgate do Gerador</h1>
+      <div class="badge">Fase 2 · Basicando 2 · básico-intermediário</div>
+      <div class="subtitle">
+        Treino de decisões para quem já pegou o básico e quer subir um degrau — sem virar “prova impossível”.
+      </div>
+      <div class="disclaimer">
+        Jogo educativo e experimental. Não substitui manuais, treinamentos oficiais
+        ou procedimentos específicos de fabricantes. Use como apoio e diversão técnica.
+      </div>
+
+      <button class="btn-primary" onclick="startGame()">
+        Começar plantão (Fase 2)
+      </button>
+
+      <button class="btn-ghost" onclick="showCredits()">
+        Ver créditos
+      </button>
+
+      <div class="tagline">
+        Infinita Geradores · Fase 2 (Basicando 2) · v1.0.0
+      </div>
+    </div>
+
+    <!-- JOGO -->
+    <div id="gameScreen" style="display:none;">
+      <div class="mentor" id="mentorBox"></div>
+      <div class="score" id="score"></div>
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+
+      <button class="btn-primary" id="nextBtn" style="display:none;">Próxima ocorrência</button>
+      <button class="btn-ghost" id="retryBtn" style="display:none;">Tentar novamente esta ocorrência</button>
+      <button class="btn-ghost" onclick="backToMenu()">Voltar ao menu</button>
+    </div>
+
+    <!-- FINAL -->
+    <div id="endScreen" style="display:none;">
+      <h2>Fim do plantão</h2>
+      <p id="finalMessage"></p>
+      <p class="small mt-8" id="finalScore"></p>
+      <button class="btn-primary" onclick="restartGame()">
+        Jogar de novo
+      </button>
+      <button class="btn-ghost" onclick="backToMenu()">
+        Voltar ao menu
+      </button>
+      <div class="tagline mt-16">
+        Em breve: fases avançadas (sem deixar impossível pra novato).
+      </div>
+    </div>
+
+    <!-- CRÉDITOS -->
+    <div id="creditsScreen" style="display:none;">
+      <h2>Créditos</h2>
+      <p class="small">
+        Conceito, visão e prática de campo: <span class="highlight">Mano – Infinita Geradores</span>.<br/>
+        IA parceira de plantão: <span class="highlight">Akamai</span>.<br/>
+        Mentor “casca-grossa”: <span class="highlight">Germano</span>.
+      </p>
+      <p class="small mt-8">
+        Fase 2: perguntas mais puxadas que o básico, mas ainda acessíveis para quem está começando a pegar ritmo.
+      </p>
+      <button class="btn-ghost mt-16" onclick="backToMenu()">
+        Voltar ao menu
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    // =========================
+    // PERGUNTAS – FASE 2 (BASICANDO 2)
+    // =========================
+    // OBS: Eu converti suas opções A/B/C/D para o formato do jogo (array), sem quebrar nada.
+    const questions = [
+      {
+        text: "Um gerador entra em operação, mas a tensão oscila levemente após alguns minutos. Qual é a PRIMEIRA verificação recomendada?",
+        options: [
+          { text: "Substituir imediatamente o AVR", correct: false, feedback: "Calma. Trocar peça direto é chute caro. Primeiro descarte o básico." },
+          { text: "Verificar conexões elétricas e aperto dos terminais", correct: true, feedback: "Correto. Oscilação leve muitas vezes é mau contato, terminal frouxo ou conexão aquecendo." },
+          { text: "Trocar o disjuntor de saída", correct: false, feedback: "Pode falhar, mas não é a primeira suspeita para oscilação de tensão." },
+          { text: "Desligar o gerador e aguardar resfriamento", correct: false, feedback: "Resfriar não resolve causa elétrica. Primeiro verifique conexões e medições." }
+        ]
+      },
+      {
+        text: "Durante uma partida de emergência, o gerador demora mais que o normal para pegar. Qual fator pode causar esse sintoma?",
+        options: [
+          { text: "Falta de aterramento", correct: false, feedback: "Aterramento é importante, mas não costuma causar demora de partida do motor." },
+          { text: "Combustível contaminado ou ar no sistema", correct: true, feedback: "Correto. Ar na linha, filtro sujo ou diesel contaminado atrapalham a pega." },
+          { text: "Excesso de carga no quadro de saída", correct: false, feedback: "A carga influencia depois, mas demora pra pegar é mais ligado a partida/combustível." },
+          { text: "Ajuste incorreto do disjuntor", correct: false, feedback: "Disjuntor não é causa comum de demora pra motor entrar em combustão." }
+        ]
+      },
+      {
+        text: "O motor do gerador está funcionando bem, mas não há tensão na saída. Qual item deve ser verificado primeiro?",
+        options: [
+          { text: "Filtro de ar", correct: false, feedback: "Filtro de ar afeta desempenho do motor, não a geração de tensão diretamente." },
+          { text: "Nível do óleo lubrificante", correct: false, feedback: "Óleo é essencial, mas aqui o problema é elétrico: sem tensão na saída." },
+          { text: "Excitação / sistema de geração", correct: true, feedback: "Correto. Primeiro alvo: excitação/AVR/sensing/disjuntor do gerador." },
+          { text: "Radiador", correct: false, feedback: "Arrefecimento não é a causa mais provável de “motor ok e zero tensão”." }
+        ]
+      },
+      {
+        text: "Ao assumir carga, o gerador apresenta queda brusca de rotação. O que isso normalmente indica?",
+        options: [
+          { text: "Falha no sistema de combustível", correct: false, feedback: "Pode acontecer, mas o mais comum em queda brusca é carga alta de uma vez." },
+          { text: "Excesso de carga aplicada", correct: true, feedback: "Correto. Queda brusca sugere carga acima do que o conjunto consegue segurar no momento." },
+          { text: "Problema no painel de controle", correct: false, feedback: "Painel pode influenciar, mas o sintoma descrito bate mais com sobrecarga." },
+          { text: "Baixa temperatura ambiente", correct: false, feedback: "Temperatura ambiente não costuma causar queda brusca de rotação ao assumir carga." }
+        ]
+      },
+      {
+        text: "Qual prática ajuda a evitar falhas inesperadas em geradores de emergência?",
+        options: [
+          { text: "Operar apenas em emergências reais", correct: false, feedback: "Se só liga em emergência, você descobre defeito na pior hora." },
+          { text: "Testes periódicos com carga controlada", correct: true, feedback: "Correto. Teste com carga controlada revela problemas antes da emergência." },
+          { text: "Manter o gerador sempre desligado", correct: false, feedback: "Gerador parado demais dá problema (bateria, diesel, oxidação, etc.)." },
+          { text: "Trocar peças somente após falha", correct: false, feedback: "Isso vira “manutenção corretiva” e aumenta risco." }
+        ]
+      },
+      {
+        text: "O gerador funciona bem sem carga, mas apresenta instabilidade ao assumir carga. Qual verificação inicial é mais indicada?",
+        options: [
+          { text: "Regulador de tensão", correct: false, feedback: "Pode ser, mas instabilidade em carga muitas vezes é combustível/entrega de potência." },
+          { text: "Sistema de combustível", correct: true, feedback: "Correto. Em carga, falha de alimentação aparece: filtro, ar na linha, restrição, etc." },
+          { text: "Filtro de ar", correct: false, feedback: "Pode afetar, mas normalmente o combustível é verificado antes." },
+          { text: "Radiador", correct: false, feedback: "Radiador é mais ligado a aquecimento, não instabilidade imediata ao entrar em carga." }
+        ]
+      },
+      {
+        text: "Durante um teste semanal, o gerador não entra automaticamente. Qual item deve ser verificado primeiro?",
+        options: [
+          { text: "Nível de óleo", correct: false, feedback: "Importante, mas primeiro veja se está tudo configurado e autorizado para AUTO." },
+          { text: "Configuração do painel de controle", correct: true, feedback: "Correto. Verifique modo AUTO, horários, permissivas, entradas e lógica do controlador." },
+          { text: "Bateria do motor", correct: false, feedback: "Bateria entra no diagnóstico, mas primeiro confirme que houve comando de partida." },
+          { text: "Disjuntor de saída", correct: false, feedback: "Disjuntor não impede o gerador de tentar partir em teste semanal." }
+        ]
+      },
+      {
+        text: "O gerador entra em operação, mas desarma após alguns minutos sem carga. Qual causa é mais provável?",
+        options: [
+          { text: "Sobretensão", correct: false, feedback: "Pode ocorrer, mas sem carga o mais comum é sensor/proteção atuando por leitura errada." },
+          { text: "Temperatura elevada", correct: false, feedback: "Sem carga, aquecimento forte é menos provável (a não ser defeito grave no arrefecimento)." },
+          { text: "Falha de sensor ou proteção", correct: true, feedback: "Correto. Sensor ruim, chicote, permissiva, ou proteção mal ajustada derruba o gerador." },
+          { text: "Falta de combustível", correct: false, feedback: "Pode ser, mas em poucos minutos sem carga costuma aparecer primeiro alarme/sensor/proteção." }
+        ]
+      },
+      {
+        text: "Qual prática ajuda a preservar a vida útil do gerador?",
+        options: [
+          { text: "Operar sempre em carga máxima", correct: false, feedback: "Carga máxima sempre acelera desgaste. O ideal é operar dentro do recomendado." },
+          { text: "Evitar testes frequentes", correct: false, feedback: "Testes são essenciais — o que importa é fazer do jeito certo." },
+          { text: "Manter manutenção preventiva em dia", correct: true, feedback: "Correto. Preventiva e testes bem feitos = gerador confiável." },
+          { text: "Usar combustível de qualquer procedência", correct: false, feedback: "Diesel ruim é caminho curto pra dor de cabeça (borra, entupimento, falha)." }
+        ]
+      },
+      {
+        text: "Um gerador apresenta fumaça escura durante a operação. O que isso normalmente indica?",
+        options: [
+          { text: "Baixa compressão", correct: false, feedback: "Pode causar outros sintomas, mas fumaça preta geralmente é excesso de combustível/queima ruim." },
+          { text: "Mistura rica / excesso de combustível", correct: true, feedback: "Correto. Fumaça escura costuma indicar excesso de combustível ou falta de ar suficiente." },
+          { text: "Falha elétrica", correct: false, feedback: "Falha elétrica não é a causa típica de fumaça preta do motor." },
+          { text: "Falta de água no radiador", correct: false, feedback: "Falta de água tende a causar aquecimento, não fumaça preta diretamente." }
+        ]
+      },
+      {
+        text: "Qual item é essencial para partidas confiáveis em emergência?",
+        options: [
+          { text: "Disjuntor reserva", correct: false, feedback: "Pode ajudar, mas não garante partida." },
+          { text: "Bateria em bom estado", correct: true, feedback: "Correto. Sem bateria boa e carregador ok, não tem emergência que salve." },
+          { text: "Filtro de combustível novo", correct: false, feedback: "Ajuda, mas a bateria é o básico do básico para partir." },
+          { text: "Silenciador limpo", correct: false, feedback: "Importante, mas não é o essencial para partida confiável." }
+        ]
+      },
+      {
+        text: "Antes de realizar manutenção no gerador, a primeira ação deve ser:",
+        options: [
+          { text: "Abrir o painel", correct: false, feedback: "Abrir painel sem segurança é risco." },
+          { text: "Desligar o disjuntor de saída", correct: false, feedback: "É parte do processo, mas antes disso vem o isolamento e segurança geral." },
+          { text: "Garantir isolamento e segurança do equipamento", correct: true, feedback: "Correto. Segurança primeiro: isolamento, bloqueio, sinalização, EPIs." },
+          { text: "Drenar o combustível", correct: false, feedback: "Não é a primeira ação. Segurança vem antes." }
+        ]
+      },
+      {
+        text: "O painel indica falha de comunicação, mas o motor está funcionando. O que verificar primeiro?",
+        options: [
+          { text: "Sistema de arrefecimento", correct: false, feedback: "Arrefecimento não é causa direta de falha de comunicação do painel." },
+          { text: "Chicotes e conexões do painel", correct: true, feedback: "Correto. Conexões soltas, alimentação fraca ou cabo de comunicação dão esse sintoma." },
+          { text: "Nível de óleo", correct: false, feedback: "Óleo é vital, mas aqui o sintoma é comunicação, não lubrificação." },
+          { text: "Filtro de ar", correct: false, feedback: "Filtro de ar não é a causa típica de falha de comunicação." }
+        ]
+      },
+      {
+        text: "Qual é a principal função do sistema de arrefecimento?",
+        options: [
+          { text: "Aumentar a potência", correct: false, feedback: "Arrefecimento não aumenta potência; ele mantém o motor dentro da faixa segura." },
+          { text: "Reduzir o consumo", correct: false, feedback: "Pode influenciar indiretamente, mas não é a função principal." },
+          { text: "Manter a temperatura adequada de operação", correct: true, feedback: "Correto. Arrefecimento mantém o motor vivo e estável." },
+          { text: "Melhorar a tensão elétrica", correct: false, feedback: "Tensão elétrica é função de excitação/AVR, não do arrefecimento." }
+        ]
+      },
+      {
+        text: "Um gerador parado por longos períodos pode apresentar:",
+        options: [
+          { text: "Melhor desempenho", correct: false, feedback: "Parado demais geralmente piora." },
+          { text: "Menor desgaste", correct: false, feedback: "Pode até reduzir horas, mas aumenta riscos (bateria, diesel, corrosão)." },
+          { text: "Problemas de bateria e combustível", correct: true, feedback: "Correto. Bateria descarrega, diesel envelhece, e o sistema cria surpresa." },
+          { text: "Nenhuma alteração", correct: false, feedback: "Sempre altera alguma coisa com o tempo, principalmente bateria/diesel." }
+        ]
+      },
+      {
+        text: "Durante a operação, vibração excessiva pode indicar:",
+        options: [
+          { text: "Falta de carga", correct: false, feedback: "Vibração excessiva raramente é só falta de carga." },
+          { text: "Problemas mecânicos ou de fixação", correct: true, feedback: "Correto. Coxins, base, alinhamento, folgas e partes soltas são suspeitos." },
+          { text: "Falha no AVR", correct: false, feedback: "AVR é elétrico. Vibração é mais mecânica." },
+          { text: "Excesso de tensão", correct: false, feedback: "Excesso de tensão não costuma gerar vibração mecânica do conjunto." }
+        ]
+      },
+      {
+        text: "Qual teste simples ajuda a identificar problemas antes de uma emergência?",
+        options: [
+          { text: "Teste apenas visual", correct: false, feedback: "Visual ajuda, mas sozinho não prova que o conjunto segura carga." },
+          { text: "Teste de partida sem carga", correct: false, feedback: "Ajuda, mas o que revela problema de verdade é teste com carga." },
+          { text: "Teste periódico com carga controlada", correct: true, feedback: "Correto. Esse é o teste que separa “parece ok” de “está ok”." },
+          { text: "Nenhum teste é necessário", correct: false, feedback: "Teste é o que evita passar vergonha (ou desastre) na emergência." }
+        ]
+      },
+      {
+        text: "O gerador apresenta ruído anormal durante a operação. Qual atitude é mais correta?",
+        options: [
+          { text: "Ignorar se estiver funcionando", correct: false, feedback: "Ruído anormal é aviso. Ignorar costuma virar prejuízo." },
+          { text: "Aumentar a carga", correct: false, feedback: "Aumentar carga pode piorar e acelerar dano." },
+          { text: "Investigar a causa antes de continuar operando", correct: true, feedback: "Correto. Diagnosticar primeiro evita quebrar feio." },
+          { text: "Desligar permanentemente", correct: false, feedback: "Não é sempre. Primeiro investigar e tomar decisão segura." }
+        ]
+      },
+      {
+        text: "Qual fator mais influencia a confiabilidade de um gerador de emergência?",
+        options: [
+          { text: "Marca do equipamento", correct: false, feedback: "Ajuda, mas não salva gerador mal cuidado." },
+          { text: "Pintura externa", correct: false, feedback: "Pintura bonita não faz o motor pegar." },
+          { text: "Manutenção preventiva e testes", correct: true, feedback: "Correto. Preventiva e teste bem feito = confiabilidade real." },
+          { text: "Local de instalação", correct: false, feedback: "Local influencia, mas sem manutenção/testes não adianta." }
+        ]
+      },
+      {
+        text: "Em caso de dúvida durante uma falha, o mais indicado é:",
+        options: [
+          { text: "Tomar decisões rápidas sem análise", correct: false, feedback: "Pressa sem análise vira erro caro." },
+          { text: "Seguir procedimentos e verificar o básico", correct: true, feedback: "Correto. O básico bem feito resolve metade das emergências." },
+          { text: "Ajustar parâmetros aleatoriamente", correct: false, feedback: "Mexer aleatório piora e mascara a causa." },
+          { text: "Forçar o equipamento", correct: false, feedback: "Forçar equipamento em emergência é receita pra quebrar de vez." }
+        ]
+      }
+    ];
+
+    // =========================
+    // ESTADO DO JOGO
+    // =========================
+    let currentIndex = 0;
+    let score = 0;
+    let answered = false;
+
+    const menuScreen = document.getElementById("menuScreen");
+    const gameScreen = document.getElementById("gameScreen");
+    const endScreen = document.getElementById("endScreen");
+    const creditsScreen = document.getElementById("creditsScreen");
+
+    const mentorBox = document.getElementById("mentorBox");
+    const scoreEl = document.getElementById("score");
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const feedbackEl = document.getElementById("feedback");
+    const nextBtn = document.getElementById("nextBtn");
+    const retryBtn = document.getElementById("retryBtn");
+    const finalMessageEl = document.getElementById("finalMessage");
+    const finalScoreEl = document.getElementById("finalScore");
+
+    function setMentorMessage(text) {
+      if (mentorBox) mentorBox.textContent = "🧢 Germano: " + text;
+    }
+
+    // =========================
+    // FUNÇÕES DE TELA
+    // =========================
+    function showOnly(screen) {
+      menuScreen.style.display = "none";
+      gameScreen.style.display = "none";
+      endScreen.style.display = "none";
+      creditsScreen.style.display = "none";
+      screen.style.display = "block";
+    }
+
+    function backToMenu() {
+      showOnly(menuScreen);
+    }
+
+    function showCredits() {
+      showOnly(creditsScreen);
+    }
+
+    // =========================
+    // UTIL – EMBARALHAR
+    // =========================
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // =========================
+    // LÓGICA DO JOGO
+    // =========================
+    function startGame() {
+      currentIndex = 0;
+      score = 0;
+      answered = false;
+      showOnly(gameScreen);
+      setMentorMessage("Fase 2 na área. Aqui já começa a ficar sério, mas sem virar impossível. Lê com calma.");
+      loadQuestion();
+    }
+
+    function restartGame() {
+      startGame();
+    }
+
+    function updateScore() {
+      const total = questions.length;
+      scoreEl.textContent = "Ocorrência " + (currentIndex + 1) + " de " + total + " • Pontos: " + score;
+    }
+
+    function loadQuestion() {
+      answered = false;
+      feedbackEl.textContent = "";
+      nextBtn.style.display = "none";
+      if (retryBtn) retryBtn.style.display = "none";
+
+      const total = questions.length;
+      const numero = currentIndex + 1;
+      setMentorMessage("Ocorrência " + numero + " de " + total + ". Pensa como plantão de verdade, sem chute.");
+
+      const q = questions[currentIndex];
+      questionEl.textContent = q.text;
+      optionsEl.innerHTML = "";
+
+      const indices = q.options.map((_, i) => i);
+      const shuffled = shuffleArray(indices);
+
+      shuffled.forEach((idx) => {
+        const opt = q.options[idx];
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.textContent = opt.text;
+        btn.onclick = function () {
+          selectOption(idx);
+        };
+        optionsEl.appendChild(btn);
+      });
+
+      updateScore();
+    }
+
+    function selectOption(index) {
+      if (answered) return;
+
+      const q = questions[currentIndex];
+      const chosen = q.options[index];
+      answered = true;
+
+      if (chosen.correct) {
+        score++;
+        feedbackEl.textContent = "✅ " + (chosen.feedback || "Boa. Decisão correta.");
+        setMentorMessage("Aí sim. Essa é a linha de raciocínio que evita prejuízo.");
+        nextBtn.style.display = "inline-block";
+        if (retryBtn) retryBtn.style.display = "none";
+      } else {
+        feedbackEl.textContent = "❌ " + (chosen.feedback || "Quase. Revisa o básico e tenta de novo.");
+        setMentorMessage("Quase. Em emergência, primeiro faz o simples bem feito.");
+        if (retryBtn) retryBtn.style.display = "inline-block";
+        nextBtn.style.display = "none";
+      }
+
+      updateScore();
+    }
+
+    function endGame() {
+      showOnly(endScreen);
+      const total = questions.length;
+      let mensagem;
+
+      if (score === total) {
+        mensagem = "Plantão perfeito! Fase 2 concluída sem escorregar.";
+      } else if (score > total / 2) {
+        mensagem = "Bom desempenho. Você já tá pegando o ritmo do raciocínio de plantão.";
+      } else {
+        mensagem = "Abaixo do ideal. Repete a Fase 2 e treina o ‘básico bem feito’ até ficar automático.";
+      }
+
+      finalMessageEl.textContent = mensagem + " — Germano.";
+      finalScoreEl.textContent = "Pontuação final: " + score + " de " + total + " ocorrências.";
+      setMentorMessage("Plantão encerrado. Quando quiser, eu puxo a Fase 3.");
+    }
+
+    nextBtn.addEventListener("click", function () {
+      currentIndex++;
+      if (currentIndex < questions.length) {
+        loadQuestion();
+      } else {
+        endGame();
+      }
+    });
+
+    if (retryBtn) {
+      retryBtn.addEventListener("click", function () {
+        loadQuestion();
+      });
+    }
+
+    showOnly(menuScreen);
+  </script>
+</body>
+</html>
